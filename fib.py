@@ -11,7 +11,7 @@ def fib_recursion(n):
 
     if n == 0:
         print('Please input value bigger than 0')
-        return -1
+        return 0
     elif n == 1 or n == 2:
         return 1
     else:
@@ -41,7 +41,7 @@ def fib_gen(n):
 
 
 def main():
-    n = 50
+    n = 5
     global memo
     memo = {1: 1, 2: 1}
     '''
@@ -50,7 +50,7 @@ def main():
     --------------------    
     '''
     start = time.time()
-    #res = [fib_recursion(i) for i in range(1, n)]
+    res = [fib_recursion(i) for i in range(1, n)]
     end = time.time()
     print('Elapsed time of recursion method is %.5f:' + str(end - start))
     '''
