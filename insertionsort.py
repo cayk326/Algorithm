@@ -14,8 +14,8 @@ def insertionsort(data):
             data[j + 1] = data[j] #要素を一つ後ろにずらす
             j -= 1
         data[j + 1] = temp
-
+    return data
 
 if __name__ == '__main__':
-    data = [5,3,4,7,2,8,6,9,1]
+    data = [5,3,4,7,2,8,6,9]
     print(insertionsort(data))
