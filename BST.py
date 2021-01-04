@@ -19,6 +19,32 @@ class BinarySearchTree(object):
     def __init__(self):
         self.root = None
 
+    '''
+    木の最小値を返す
+    '''
+    def get_min(self):
+        if self.root:
+            return self._get_min(self.root)
+        return False
+
+    def _get_min(self, node):
+        if node.left:
+            return self._get_min(node.left)
+        return node.data
+
+    '''
+    木の最大値を返す
+    '''
+    def get_max(self):
+        if self.root:
+            return self._get_max(self.root)
+        return False
+
+    def _get_max(self, node):
+        if node.right:
+            return self._get_max(node.right)
+        return node.data
+
     def insert(self, data):
         '''
         挿入対象データを木に挿入する
@@ -58,6 +84,43 @@ class BinarySearchTree(object):
                 node.right = Node(data)
 
 
+    def dfs_inorder(self, tree):
+        '''
+        行きがけ順の深さ優先探索
+        ソートされた値を表示できる
+
+        1. 左下に再帰的に潜れるだけ潜る
+        2. 左最下層の値を表示
+        3. 一個前のノードに戻る
+        4. 現在の値を表示
+        5. 右に一個潜る
+        6. 左に潜れそうならいけるだけ潜る
+        7. 最下層で値を表示
+        8. 3に戻る
+        :param tree:
+        :return:
+        '''
+        node = tree
+        # 木に何も存在しないとき
+        if node is None:
+            print("No data")
+            return
+        # 存在するとき
+        else:
+            # 左下に潜れるだけ潜る
+            if node.left:
+                self.dfs_inorder(node.left)
+            # 表示
+            print(node.data)
+            # 右に潜れるだけ潜る
+            if node.right:
+                self.dfs_inorder(node.right)
+
+
+
+
+
+
 
 
 
@@ -65,7 +128,16 @@ class BinarySearchTree(object):
 if __name__ == '__main__':
     bst = BinarySearchTree()
 
-    bst.insert(5)
+    bst.insert(8)
     bst.insert(3)
-    bst.insert(5)
+    bst.insert(10)
+    bst.insert(1)
+    bst.insert(6)
+    bst.insert(14)
+    bst.insert(4)
+    bst.insert(7)
+    bst.insert(13)
+    print(bst.get_max())
+    print(bst.get_min())
     print()
+    bst.dfs_inorder()
