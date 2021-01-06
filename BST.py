@@ -1,3 +1,45 @@
+class Queue(object):
+    def __init__(self):
+        self.items = []
+
+    def enqueue(self, item):
+        self.items.insert(0, item)
+
+    def dequeue(self):
+        if not self.is_empty():
+            return self.items.pop()
+
+    def is_empty(self):
+        return len(self.items) == 0
+
+    def peek(self):
+        if not self.is_empty():
+            return self.items[-1].value
+
+    def __len__(self):
+        return self.size()
+
+    def size(self):
+        return len(self.items)
+
+class Stack(object):
+    def __init__(self):
+        self.items = []
+    def push(self, item):
+        self.items.append(item)
+    def pop(self):
+        if not self.is_empty():
+            return self.items.pop()
+    def is_empty(self):
+        return len(self.items) == 0
+    def peek(self):
+        if not self.is_empty():
+            return self.items[-1]
+    def size(self):
+        return len(self.items)
+    def __len__(self):
+        return self.size()
+
 class Node(object):
     '''
     節クラス
@@ -224,6 +266,57 @@ class BinarySearchTree(object):
 
             print(node.data)
 
+    def bfs(self, tree):
+        '''
+        キューを用いた幅優先探索
+        根から順番に探索する
+        最短経路問題を解くことが出来る
+        :param tree:
+        :return:
+        '''
+        print()
+        if tree is None:
+            print("No data")
+            return
+        start = tree
+
+        # キューの作成
+        queue = Queue()
+        queue.enqueue(start)
+        while len(queue) > 0:
+            node = queue.dequeue()
+            print(node.data)
+            # 左側の子ノードが存在するとき
+            if node.left:
+                queue.enqueue(node.left)
+            # 右側の子ノードが存在するとき
+            if node.right:
+                queue.enqueue(node.right)
+
+    def reverse_bfs(self, tree):
+        if tree is None:
+            print("No data")
+            return
+        start = tree
+        #スタックとキューを用意
+        stack = Stack()
+        queue = Queue()
+        queue.enqueue(start)
+
+        while len(queue) > 0:
+            node = queue.dequeue()
+            stack.push(node)
+            if node.left:
+                queue.enqueue(node.left)
+            # 右側の子ノードが存在するとき
+            if node.right:
+                queue.enqueue(node.right)
+
+        while len(stack) > 0:
+            node = stack.pop()
+            print(node.data)
+
+
 
 if __name__ == '__main__':
     bst = BinarySearchTree()
@@ -247,9 +340,18 @@ if __name__ == '__main__':
     print("-----Posteorder-----")
     bst.dfs_postorder(bst.root)
     print("--------------")
-    #print(bst.get_max())
-    #print(bst.get_min())
-    #bst.delete(1)
-    #bst.delete(13)
-    #bst.delete(10)
-    #bst.delete(8)
+    print("-----BFS-----")
+    bst.bfs(bst.root)
+    print("--------------")
+    print("-----BFS_ Reverse-----")
+    bst.reverse_bfs(bst.root)
+    print("--------------")
+    print("最大値は"+str(bst.get_max()))
+    print("最小値は"+str(bst.get_min()))
+    bst.delete(1)
+    bst.delete(13)
+    bst.delete(10)
+    bst.delete(8)
+    print("-----ノード削除後のInorder-----")
+    bst.dfs_inorder(bst.root)
+    print("--------------")
