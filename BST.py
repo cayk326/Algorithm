@@ -21,6 +21,7 @@ class BinarySearchTree(object):
 
     '''
     木の最小値を返す
+    計算量は平衡状態ならO(logN)
     '''
     def get_min(self):
         if self.root:
@@ -34,6 +35,7 @@ class BinarySearchTree(object):
 
     '''
     木の最大値を返す
+    計算量は平衡状態ならO(logN)
     '''
     def get_max(self):
         if self.root:
@@ -50,6 +52,7 @@ class BinarySearchTree(object):
         挿入対象データを木に挿入する
         _insertが挿入ロジックの本体で、insertは木にノードが存在しない際の
         処理を記載
+        計算量は平衡状態ならO(logN)
         :param data:
         :return:
         '''
@@ -82,6 +85,67 @@ class BinarySearchTree(object):
                 self._insert(node.right, data)
             else:
                 node.right = Node(data)
+
+    def delete(self, data):
+        '''
+        指定した数を持つノードの削除をする
+        親ノードの子ノードへのポインタを設定するための機構といくつかの場合分けが必要。
+        計算量は平衡状態ならばO(logN)
+        :param data:
+        :return:
+        '''
+        if self.root:
+            self.root = self._delete(self.root, data)
+        return False
+    def _delete(self, node, data):
+        # ノードに何もなければ実行しない
+        if not node:
+            return node
+        # もしdataがnode.dataより小さいなら左に移動
+        if data < node.data:
+            node.left = self._delete(node.left, data)
+        # もしdataがnode.dataより大きいなら右に移動
+        elif data > node.data:
+            node.right = self._delete(node.right, data)
+        else:
+            # 削除対象ノードに遷移したので子ノードを持つかチェックする。
+            # 子ノードが無い場合はノードを削除する
+            if not node.left and not node.right:
+                del node
+                # 親ノードの子ノード(今削除したノード)へのポインタをNoneにする
+                return None
+            # 左の子ノードのみが存在する場合
+            elif not node.right:
+                # 左の子ノードを退避
+                temp = node.left
+                # ノードを削除する
+                del node
+                # 親ノードには左の子ノードのポインタのみを返す
+                return temp
+            # 右の子ノードのみが存在する場合
+            elif not node.left:
+                # 右の子ノードを退避
+                temp = node.right
+                # ノードを削除
+                del node
+                # 親ノードには右の子ノードのポインタのみ返す
+                return temp
+            # 左右の子ノードが存在する場合
+            else:
+                # 削除対象ノードの配下に存在するノードで最大のものを探す関数
+                def _get_max_node(node):
+                    if node.right:
+                        return _get_max_node(node.right)
+                    return node
+                # 削除対象ノードの左側の木に存在するノードで最大のものを持ってくる
+                # これによって左の子 <= 親 < 右の子の関係を維持する
+                temp = _get_max_node(node.left)
+                # 削除対象ノードに削除対象ノードの左側ツリーの最大ノードを代入
+                node.data = temp.data
+
+                # 削除対象ノードの左子ツリーにいる、入れ替えたノードを削除
+                node.left = self._delete(node.left, temp.data)
+        return node
 
 
     def dfs_inorder(self, tree):
@@ -137,7 +201,12 @@ if __name__ == '__main__':
     bst.insert(4)
     bst.insert(7)
     bst.insert(13)
-    print(bst.get_max())
-    print(bst.get_min())
-    print()
-    bst.dfs_inorder()
+    #print(bst.get_max())
+    #print(bst.get_min())
+    bst.dfs_inorder(bst.root)
+    print("--------------")
+    #bst.delete(1)
+    #bst.delete(13)
+    #bst.delete(10)
+    bst.delete(8)
+    bst.dfs_inorder(bst.root)
