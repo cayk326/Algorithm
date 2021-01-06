@@ -146,13 +146,17 @@ class BinarySearchTree(object):
                 # 削除対象ノードの左子ツリーにいる、入れ替えたノードを削除
                 node.left = self._delete(node.left, temp.data)
         return node
-
+    '''
+    下記三つに深さ優先探索を３パターン記載する
+    再帰を使って実装しているため、木の高さ分コールスタックを使用する。
+    すなわち、平衡状態が保たれていないとコールスタックを大幅に使用してしまうリスクがある。
+    '''
 
     def dfs_inorder(self, tree):
         '''
-        行きがけ順の深さ優先探索
+        通りがけ順の深さ優先探索
         ソートされた値を表示できる
-
+        左に部分木->根->右の部分木の順に探索
         1. 左下に再帰的に潜れるだけ潜る
         2. 左最下層の値を表示
         3. 一個前のノードに戻る
@@ -181,12 +185,44 @@ class BinarySearchTree(object):
                 self.dfs_inorder(node.right)
 
 
+    def dfs_preorder(self, tree):
+        '''
+        行きがけ順の深さ優先探索
+        根->左の部分木->右の部分木の順に探索
+        二分探索木のコピー作成や数式の構文木からポーランド記法を得る等に応用可能
+
+        '''
+        node = tree
+        if node is None:
+            print("No data")
+        else:
+            print(node.data)
+            if node.left:
+                self.dfs_preorder(node.left)
+            if node.right:
+                self.dfs_preorder(node.right)
 
 
+    def dfs_postorder(self, tree):
+        '''
+        帰りがけ順の深さ優先探索
+        左の部分木->右の部分木->根の順に探索
+        :param tree:
+        :return:
+        '''
+        node = tree
+        # 木に何も存在しないとき
+        if node is None:
+            print("No data")
+            return
+        else:
+            if node.left:
+                self.dfs_postorder(node.left)
 
+            if node.right:
+                self.dfs_postorder(node.right)
 
-
-
+            print(node.data)
 
 
 if __name__ == '__main__':
@@ -201,12 +237,19 @@ if __name__ == '__main__':
     bst.insert(4)
     bst.insert(7)
     bst.insert(13)
-    #print(bst.get_max())
-    #print(bst.get_min())
+
+    print("-----Preorder-----")
+    bst.dfs_preorder(bst.root)
+    print("--------------")
+    print("-----Inorder-----")
     bst.dfs_inorder(bst.root)
     print("--------------")
+    print("-----Posteorder-----")
+    bst.dfs_postorder(bst.root)
+    print("--------------")
+    #print(bst.get_max())
+    #print(bst.get_min())
     #bst.delete(1)
     #bst.delete(13)
     #bst.delete(10)
-    bst.delete(8)
-    bst.dfs_inorder(bst.root)
+    #bst.delete(8)
