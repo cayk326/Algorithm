@@ -195,7 +195,10 @@ def is_prime_fermat(n):
     return pow(2, n -1, n) == 1# a = 2のときの素数をフェルマーの小定理を用いて求める(疑素数あり)
 
 
+'''
+累乗計算
 
+'''
 
 def simple_pow(a, n):
     '''
@@ -247,6 +250,90 @@ def binnary_pow_mod(a, n, mod):
     return ans
 
 
+'''
+最大公約数
+'''
+
+def gcd(a, b):
+    '''
+    最大公約数には下記の特徴がある
+    二つの自然数a, bについてaをbで割った商をq、余りをrとすると
+    a / b = q + rで
+    gcd(a, b) = gcd(b, r)が成り立つ
+    ユークリッドの互除法を活用して自然数a, bの最大公約数を求める
+    計算量: a / b = q + rより、a = qb + r
+    　　　　よって、q >= 1であり、 a >= b + r >= 2rとなるため
+            r <= q / 2
+            これはすなわち、ユークリッドの互除法を2回行うと
+            (a, b) -> (b, r1) -> (r1, r2)となりa, bは半分以下となる。
+            よって計算量は2log aでありO(log a)となる。
+
+    :param a: 整数a
+    :param b: 整数b
+    :return: 最大公約数
+    '''
+    while b != 0:
+        # a < b であってもa % b = aとなり入れ替わってa及びbに代入されるため条件式はいらない
+        a, b = b, a % b
+    return a
+
+def recursive_gcd(a, b):
+    '''
+    最大公約数には下記の特徴がある
+    二つの自然数a, bについてaをbで割った商をq、余りをrとすると
+    a / b = q + rで
+    gcd(a, b) = gcd(b, r)が成り立つ
+    ユークリッドの互除法を活用して自然数a, bの最大公約数を求める
+    再帰型
+
+    計算量: a / b = q + rより、a = qb + r
+    　　　　よって、q >= 1であり、 a >= b + r >= 2rとなるため
+            r <= q / 2
+            これはすなわち、ユークリッドの互除法を2回行うと
+            (a, b) -> (b, r1) -> (r1, r2)となりa, bは半分以下となる。
+            よって計算量は2log aでありO(log a)となる。
+
+    :param a: 整数a
+    :param b: 整数b
+    :return: 最大公約数
+    '''
+    if b == 0:
+        return a
+    else:
+        return recursive_gcd(b, a % b)
+
+def extgcd(a, b):
+    '''
+    ax + by = gcd(a, b) = dを満たすx, y, dを求める
+    拡張ユークリッド互除法を用いて不定方程式を解く
+    :param a:
+    :param b:
+    :return:
+    '''
+    if b == 0:
+        return a, 1, 0
+    else:
+
+        d, y, x = extgcd(b, a % b)
+        y -= (a // b) * x
+        return d, x, y
+
+
+def lcm(a, b):
+    '''
+    最小公倍数を求める
+    正の整数a, bに対して最大公約数をg,　最小公倍数をlとすると
+    ab = gl
+    よってl = ab/g
+    計算量: O(log a)gcdに依存する。
+    :param a:
+    :param b:
+    :return:
+    '''
+    return (a * b) // recursive_gcd(a,b)
+
+
+
 def test_divisors():
     import time
     N = 1000000
@@ -292,5 +379,6 @@ def test_prime():
 
 if __name__ == '__main__':
     #test_prime()
+    print(gcd(300, 780))
     print(is_prime_fermat(100))
     print(binnary_pow_mod(3, 100, 19))
