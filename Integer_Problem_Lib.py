@@ -63,11 +63,18 @@ def quick_divisors(n):
     '''
     lower_divisors , upper_divisors = [], []
     i = 1
-    while i**2 <= n:
-        if n % i == 0:
+    while i**2 <= n:#整数Nの平方根まで走査
+        if n % i == 0:#iで割り切れればその値を追加
             lower_divisors.append(i)
-            if i != n // i:
-                upper_divisors.append(n//i)
+            if i != n // i:#iとN//iが一致しないとき
+                upper_divisors.append(n//i)# n//iを追加
+                '''
+                Nがある値aで割り切れるとき、aだけでなくN/aも追加する
+                ただし、N=25, a=5の時のようにN/aとaが一致してしまうケースがあり
+                ダブルカウントをする場合がある。これを排除するために
+                N/a != aを条件として入れている
+                
+                '''
         i += 1
     return lower_divisors + upper_divisors[::-1]
 
@@ -193,6 +200,32 @@ def is_prime_fermat(n):
     if n < 2 or n & 1 == 0: return False
 
     return pow(2, n -1, n) == 1# a = 2のときの素数をフェルマーの小定理を用いて求める(疑素数あり)
+
+def prime_factorization(n):
+    '''
+    ある整数Nの素因数分解を行い構成要素を返す
+    計算量：sqrt(N)
+    :param n:
+    :return:
+    '''
+    print()
+    ans = {}
+    i = 2#素因数分解するときの割る数の最小値
+    while i*i <= n:#走査範囲 2 -> sqrt(n)
+        print()
+        while n % i == 0:# ある整数nをiで割りきれるならば
+            n //= i# ある整数nをiで割った商に更新する
+            if i in ans:#もし素因数が辞書に登録されていれば、その値を一個増やす
+                ans[i] += 1
+            else:#もし素因数が辞書に登録されていなければ追加する
+                ans[i] = 1
+        i += 1# 他に割れる数が無いか調べるためにインクリメント。でも実際には4で割れるなら2で割れるし6で割れるなら3で割れる
+    if n!= 1:# 最後まで残ってしまった数を素因数して登録(つまりnを1にできていないということはその数n自体が素数)
+        ans[n] = 1
+    return list(ans.items())
+
+
+
 
 
 '''
@@ -379,6 +412,8 @@ def test_prime():
 
 if __name__ == '__main__':
     #test_prime()
+
+    print(prime_factorization(9))
     print(gcd(300, 780))
     print(is_prime_fermat(100))
     print(binnary_pow_mod(3, 100, 19))
