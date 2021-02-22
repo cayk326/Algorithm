@@ -10,4 +10,4 @@ def divisors(n):
     return lower_divisors + upper_divisors[::-1]
 
 if __name__ == '__main__':
-    print(divisors(10))
+    print(divisors(1000000000))
