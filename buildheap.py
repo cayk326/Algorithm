@@ -43,7 +43,7 @@ def min_build_heap(data):
 
 def min_heap_push(heap, val):
     heap.append(val)# 値を追加する
-    min_build_heap(data)# ヒープを再構築する
+    min_build_heap(heap)# ヒープを再構築する
 
 def min_heap_pop(heap):
     '''
