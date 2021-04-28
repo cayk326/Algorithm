@@ -47,6 +47,7 @@ def min_heap_push(heap, val):
 
 def min_heap_pop(heap):
     '''
+
     最小値を取り出す。その後、二番目に小さい値を根ノードとして
     再度ヒープを構築する
     :param heap:
